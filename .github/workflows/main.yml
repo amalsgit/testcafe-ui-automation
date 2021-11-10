@@ -1,0 +1,24 @@
+name: Build
+on: [push]
+
+jobs:
+  build:
+    name: Run TestCafe Tests
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - name: Install dependencies
+        run: yarn
+      - name: Run tests
+        run: yarn e2e
+      - name: Generate Reports
+        if: always()
+        run: yarn reports
+      - uses: actions/upload-artifact@v2
+        if: ${{ always() }}
+        with:
+          name: reports
+          path: reports
